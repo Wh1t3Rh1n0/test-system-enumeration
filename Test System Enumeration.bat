@@ -63,19 +63,10 @@ net use 2>&1 > mounted_smb_shares.txt
 echo ____Test user group memberships 2 and privileges____ >> progress.log
 whoami /groups /priv /fo csv > test-user-groups-and-privs.csv
 
-echo ____Domain User Comments____ >> progress.log
-for /F "tokens=1,2,3" %%i in ('net user /domain ^| findstr /V "^$"') do net user /domain %%i >> comments--domain_users.txt & net user /domain %%j >> comments--domain_users.txt & net user /domain %%k >> comments--domain_users.txt
-
-echo ____Domain Group Comments____ >> progress.log
-for /F "tokens=1,2 delims=*" %%i in ('net group /domain') do net group /domain "%%i" >> comments--domain_groups.txt
-
 echo ____SYSVOL Group Policy passwords search____ >> progress.log
 powershell.exe -c "ls \\$($env:USERDNSDOMAIN)\sysvol\*\Policies\* -Recurse -Include *.xml | select-string password | Set-Content sysvol--password-search.txt -Encoding Ascii -PassThru"
 
 echo ____SYSVOL ALL passwords search____ >> progress.log
 powershell.exe -c "ls \\$($env:USERDNSDOMAIN)\sysvol\* -Recurse -Exclude *.adm*,*.dll,*.exe | select-string password | Set-Content sysvol--password-search-FULL.txt -Encoding Ascii -PassThru"
-
-echo ____SYSVOL cpassword strings____ >> progress.log
-findstr /I /S cpassword %logonserver%\sysvol\*.xml > sysvol--cpassword_search.txt
 
 echo Finished %date% %time% >> progress.log
