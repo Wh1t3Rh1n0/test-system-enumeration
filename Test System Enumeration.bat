@@ -3,7 +3,7 @@ cd /d "%~dp0"
 md "Enum-Output"
 cd "Enum-Output"
 
-echo Started %date% %time% > progress.log
+echo Started %date% %time% >> progress.log
 
 echo _____Local users and administrators_____ >> progress.log
 net user > local-users.txt
